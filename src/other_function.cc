@@ -111,3 +111,42 @@ void S21Matrix::set_rows(const int row) {
   }
 }
 
+double S21Matrix::find_determinant_second_way(){
+  double determinat = 1;
+  for (int i = 1; i < rows_; i++){
+    for (int j = 0; j < i; j++){
+      if(matrix_[i][j] != 0){
+        double cof = matrix_[i][j] / matrix_[j][j];
+        for(int k = 0; k < cols_; k++){
+          double result = matrix_[i][k] - cof * matrix_[j][k];
+          if(abs(result) < 1e-07) matrix_[i][k] = 0;
+          else {matrix_[i][k] = result;}
+        }
+      }
+    }
+  }
+  for (int i = 0; i < rows_; i ++){
+    determinat *= matrix_[i][i];
+  }
+  return determinat;
+}
+
+double S21Matrix::find_determinant_third_way(){
+  S21Matrix temp(*this), origin(*this);
+  double del = 1;
+  for (int i = 0; i < rows_; i ++){
+    for (int j = 0; j < rows_; j++){
+      if(j == i) continue;
+      for (int k = 0; k < rows_; k++){
+          temp(j, k) = (origin(i,i) * origin(j,k)) - (origin(j,i) * origin(i,k));
+          temp(j, k) /= del;
+        }
+      }
+    del = temp(i, i);
+    origin = temp;
+    // std::cout << std::endl<< "matrix = " << std::endl;
+    // temp.print_matrix();
+  }
+  (*this) = std::move(temp);
+  return temp(0, 0);
+}

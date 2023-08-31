@@ -45,6 +45,8 @@ class S21Matrix {
   void set_cols(const int col);
   int get_rows() const;
   void set_rows(const int row);
+  double find_determinant_second_way();
+  double find_determinant_third_way();
 
  private:
   int rows_, cols_;
